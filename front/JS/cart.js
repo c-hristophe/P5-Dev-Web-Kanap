@@ -9,7 +9,7 @@ let data = JSON.parse(objLinea);
 for (let pas = 0; pas < data.length; pas++) {
 let nom = data[pas].nom;
 let qte = data[pas].qte;
-let qteTemp = 
+
 localStorage.setItem ('qteOld', qte)
 let color = data[pas].color;
 
