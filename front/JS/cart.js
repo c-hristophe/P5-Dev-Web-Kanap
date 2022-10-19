@@ -2,7 +2,7 @@
 
 let objLinea = localStorage.getItem("obj");
 let data = JSON.parse(objLinea);
-
+localStorage.clear
 
 
 //définition des variables
@@ -101,7 +101,7 @@ const pParent = document.querySelector("cart__item__content__description");
 
 //prix
 const p2Parent = document.querySelector("cart__item__content__description"); 
-    p2.innerText = data.price+",00" +"€";
+    p2.innerText = data.price.toFixed(2) +"€";
 
 //quantité
  
@@ -148,26 +148,99 @@ function removeDummy() {
             let productInLocalStoragepars = JSON.parse(productInLocalStorage);     
             productInLocalStoragepars = productInLocalStoragepars.filter(item=> ((item.nom,item.color) !== (el3,el4)));
             filteredStr = JSON.stringify(productInLocalStoragepars); 
-                        
+                       
             localStorage.setItem("obj",filteredStr);
+            location.reload();
 
             var elem = article;
             elem.parentNode.removeChild(elem)    
         };
     
 }
-// remplir total qte
 
-let quantite = input.getAttribute("value");
+//modifier la quantité
+document.getElementsByName("itemQuantity")[0].addEventListener("change", changeQuantity); 
 
-var tableau = [];
- 
-tableau.push(quantite)
-
-
-console.log(tableau)
+function changeQuantity() {
+    
+    
+        let el5 = this.value;
+    
+        // let objcolor = ;
+       
+        console.log (el5);
+        const test = document.getElementsByClassName('cart__item');
+        console.log(test.dataset)
+        
+        // let productInLocalStorage = localStorage.getItem("obj");
+        // let productInLocalStoragepars = JSON.parse(productInLocalStorage);     
+        // const index = productInLocalStoragepars.findIndex(
+        //     (productInLocalStoragepars) => productInLocalStoragepars.nom == elTitle && productInLocalStoragepars.color == elColor
+        //   );
+        //   productInLocalStoragepars[index] = {
+        //    nom: elTitle,
+        //    qte: el5,
+        //    color: elColor
+        //   }
+        // filteredStr = JSON.stringify(productInLocalStoragepars); 
+                       
+        // localStorage.setItem("obj",filteredStr);
+        // console.log(filteredStr)
+   
+}
 
  
 })
 
 }
+// remplir total qte et prix
+
+            let totalPanier = localStorage.getItem('obj')
+            let totalPanierpar = JSON.parse (totalPanier)
+            console.log(totalPanierpar)
+            for (let pas = 0; pas < totalPanierpar.length; pas++) {
+            fetch("http://localhost:3000/api/products/" + totalPanierpar[pas].nom)
+
+            .then(function(res) {
+            if (res.ok) {
+                return res.json();
+            }
+          
+            })
+            //calcul du total des prix
+            .then(function(valuePrice) {
+               
+                let mul = 0;
+                let add = 0;
+                
+                let value = valuePrice.price;
+                mul =  value* totalPanierpar[pas].qte;
+                console.log(mul)
+                for (let pas = 0; pas < totalPanierpar.length; pas++) {
+                add += mul;
+                }
+                console.log(add) 
+                let span = document.querySelector("#totalPrice"); 
+                span.innerText = add.toFixed(2);
+                   
+              })
+            // calcul du total des quantités
+            .then(function getNumberProducts(){
+
+                let sum = 0;
+
+                for (let i = 0; i < totalPanierpar.length; i++) {
+                    sum += totalPanierpar[i].qte;
+                  console.log(sum) 
+                
+                  let span = document.querySelector("#totalQuantity"); 
+                  span.innerText = sum;
+
+            }})
+            
+            
+            }
+
+
+
+

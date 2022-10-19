@@ -73,11 +73,10 @@ const elt = document.querySelector('#addToCart');
  
 elt.addEventListener('click', function LignePanier (nom, qte, color) {   
     var nom = id;
-    var qte = parseInt(document.getElementById("quantity").value);
-   
+    var qte = document.getElementById("quantity").value;
     var color = document.querySelector('#colors').value;
     
-  
+  console.log(qte)
     
 verif_saisie(qte, color);
   
@@ -86,7 +85,7 @@ let newItem = [{
   qte,
   color,  
 }]
-
+console.log(newItem);
   let productInLocalStorage = localStorage.getItem("obj");
   let productInLocalStorageParse = JSON.parse(productInLocalStorage);
     //s'il y a des produits dans le local storage  
@@ -122,20 +121,13 @@ let newItem = [{
                  
                 let objcolor = gestionArticlepars[i]['color'];
                  
-                
+                 let objQte = gestionArticlepars[i]['qte'];
                  
                  uniqueObject[objTitle && objcolor] = gestionArticlepars[i];
 
                   // modification quantité pour 2 articles identiques
-                 
-                 let objQte = gestionArticlepars[i]['qte'];
-                 
-                 
-                
-                 ////////////////////////////
-                localStorage.setItem('objTitle',objTitle);
-                localStorage.setItem('objcolor',objcolor);
-                localStorage.setItem('objQte',objQte);          
+           
+                         
              }
                
              for (i in uniqueObject) {
@@ -144,29 +136,35 @@ let newItem = [{
              }
                
              
- 
-             let objTitle = localStorage.getItem('objTitle');
-             let objQte = localStorage.getItem('objQte');
-             let objcolor = localStorage.getItem('objcolor');
-             let qteOld = localStorage.getItem('qteOld');
-             
+             let objTitle = gestionArticlepars['nom'];
                  
-             const index = newArray.findIndex(
-                  (newArray) => newArray.nom == objTitle && newArray.color == objcolor
-                );
+             let objcolor = gestionArticlepars['color'];
+             let qteOld = localStorage.getItem('qteOld');
+            
+                 
+             var index = newArray.findIndex(
+              item => item.nom == objTitle && item.color == objcolor
+              );
+
+             console.log(index)
+                
+                if(index != -1) {
                 newArray[index] = {
                  nom: objTitle,
                  qte: Number(objQte) + Number(qteOld),
                  color: objcolor
                 }
+              }
 
             let newArrayStr= JSON.stringify(newArray);
             localStorage.setItem("obj",newArrayStr);    
 
                  console.log(newArray) 
-                 console.log(index)
+                 
                  console.log(objTitle)
-
+                
+                 
+            
 
   });
  
