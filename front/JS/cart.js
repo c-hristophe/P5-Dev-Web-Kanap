@@ -2,7 +2,7 @@
 
 let objLinea = localStorage.getItem("obj");
 let data = JSON.parse(objLinea);
-localStorage.clear
+
 
 
 //définition des variables
@@ -159,37 +159,40 @@ function removeDummy() {
 }
 
 //modifier la quantité
-document.getElementsByName("itemQuantity")[0].addEventListener("change", changeQuantity); 
+for (let i=0; i<100; i++){
+var elt = document.getElementsByName("itemQuantity")[i];
+elt.addEventListener('change', function() {
 
-function changeQuantity() {
-    
-    
         let el5 = this.value;
-    
-        // let objcolor = ;
-       
-        console.log (el5);
-        const test = document.getElementsByClassName('cart__item');
-        console.log(test.dataset)
+        console.log(el5)
+        localStorage.setItem('qteChange', el5)
         
-        // let productInLocalStorage = localStorage.getItem("obj");
-        // let productInLocalStoragepars = JSON.parse(productInLocalStorage);     
-        // const index = productInLocalStoragepars.findIndex(
-        //     (productInLocalStoragepars) => productInLocalStoragepars.nom == elTitle && productInLocalStoragepars.color == elColor
-        //   );
-        //   productInLocalStoragepars[index] = {
-        //    nom: elTitle,
-        //    qte: el5,
-        //    color: elColor
-        //   }
-        // filteredStr = JSON.stringify(productInLocalStoragepars); 
-                       
-        // localStorage.setItem("obj",filteredStr);
-        // console.log(filteredStr)
-   
-}
+        let article = document.getElementsByClassName('cart__item')[i]
+        let elColor = article.dataset.color;
+        let elTitle = article.dataset.id
+        let productInLocalStorage = localStorage.getItem("obj");
+        let productInLocalStoragepars = JSON.parse(productInLocalStorage);     
+     
+        const index = productInLocalStoragepars.findIndex(
+            (num) => num.nom == elTitle && num.color == elColor
+          );
+          console.log(index)
+          
+          productInLocalStoragepars[index] = {
+           nom: elTitle,
+           qte: el5,
+           color: elColor
+          }
+        
+        filteredStr = JSON.stringify(productInLocalStoragepars); 
+                      
+        localStorage.setItem("obj",filteredStr);
+        console.log(filteredStr)
+        location.reload();
 
- 
+})
+}
+    
 })
 
 }
@@ -214,7 +217,7 @@ function changeQuantity() {
                 let add = 0;
                 
                 let value = valuePrice.price;
-                mul =  value* totalPanierpar[pas].qte;
+                mul =  value* Number(totalPanierpar[pas].qte);
                 console.log(mul)
                 for (let pas = 0; pas < totalPanierpar.length; pas++) {
                 add += mul;
@@ -228,19 +231,19 @@ function changeQuantity() {
             .then(function getNumberProducts(){
 
                 let sum = 0;
-
+                
                 for (let i = 0; i < totalPanierpar.length; i++) {
-                    sum += totalPanierpar[i].qte;
+                  sum += Number(totalPanierpar[i].qte);
                   console.log(sum) 
                 
                   let span = document.querySelector("#totalQuantity"); 
                   span.innerText = sum;
-
+                  
             }})
             
             
             }
 
-
+            'order'
 
 

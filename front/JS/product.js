@@ -121,29 +121,33 @@ console.log(newItem);
                  
                 let objcolor = gestionArticlepars[i]['color'];
                  
-                 let objQte = gestionArticlepars[i]['qte'];
+                 let objQte = document.getElementById("quantity").value;
                  
                  uniqueObject[objTitle && objcolor] = gestionArticlepars[i];
-
+     
                   // modification quantité pour 2 articles identiques
            
-                         
+                localStorage.setItem('objTitle',objTitle);
+                localStorage.setItem('objcolor',objcolor);
+                localStorage.setItem('objQte)',objQte)
+                    
              }
                
              for (i in uniqueObject) {
                  newArray.push(uniqueObject[i]);
               
              }
-               
+                 
              
-             let objTitle = gestionArticlepars['nom'];
-                 
-             let objcolor = gestionArticlepars['color'];
+ 
+             let objTitle = localStorage.getItem('objTitle');
+             let objQte = document.getElementById("quantity").value;
+             let objcolor = localStorage.getItem('objcolor');
              let qteOld = localStorage.getItem('qteOld');
-            
-                 
-             var index = newArray.findIndex(
-              item => item.nom == objTitle && item.color == objcolor
+             console.log(objQte)
+///////////////////////////////////
+             const index = newArray.findIndex(
+              (product) => product.nom == objTitle && product.color == objcolor
               );
 
              console.log(index)
@@ -155,6 +159,8 @@ console.log(newItem);
                  color: objcolor
                 }
               }
+//////////////////////////////////////////
+
 
             let newArrayStr= JSON.stringify(newArray);
             localStorage.setItem("obj",newArrayStr);    
