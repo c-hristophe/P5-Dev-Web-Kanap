@@ -1,3 +1,4 @@
+//création du numéro de commande 
 var min=1; 
 var max=1000000000000000000;  
 var random = Math.floor(Math.random() * (max - min)) + min; 
@@ -5,6 +6,7 @@ console.log(random);
 
 document.getElementById("orderId").innerText = random;
 
+// création du pannier client 
 let prenom = localStorage.getItem('prenom');
 let nom = localStorage.getItem('nom');
 let adresse= localStorage.getItem('adresse'); 
@@ -33,20 +35,33 @@ console.log(commandeClientstr);
 
 // envoyer le résultat à l'API
 
-function send(e) {
-    e.preventDefault();
-  fetch("http://localhost:3000/api/order", {
-    method: "POST",
-    headers: {
-      'Accept': 'application/json', 
-      'Content-Type': 'application/json'
-    },
-    body: commandeClientstr
-  })
-  .then(function(res) {
-    if (res.ok) {
-      return res.json();
-    }
-  });
-}
-document.addEventListener('DOMContentLoaded', send);
+// function send(e) {
+//     e.preventDefault();
+//   fetch("http://localhost:3000/api/products/order/", {
+//     method: 'POST',
+//     headers: { 'Content-Type': 'application/json' },
+//     body: commandeClientstr
+//   })
+//   .then(function(res) {
+//     if (res.ok) {
+//       return res.json();
+//     }
+//   });
+// }
+// document.addEventListener('DOMContentLoaded', send)
+
+const request = {
+  method: 'POST',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+  },
+  body: commandeClientstr
+};
+
+fetch('http://localhost:3000/api/products/order', request)
+.then(function(res) {
+        if (res.ok) {
+        return res.json();
+        }
+})

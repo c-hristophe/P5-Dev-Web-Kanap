@@ -265,7 +265,7 @@ if (document.getElementById("lastName").value.match(/[0-9]/)) {
     return false;
 }
 
-if (document.getElementById("address").value.match(/[^a-z\-][^0-9]/)) {
+if (document.getElementById("address").value.match(/[@]/)) {
     document.getElementById("addressErrorMsg").innerText = "Veuillez saisir une adresse valide";
     btn.disabled = true;
     return false;
@@ -277,12 +277,33 @@ if (document.getElementById("city").value.match(/[0-9]/)) {
     return false;
 }
 
-if (document.getElementById("email").value.match(/[A-Z0-9+_.-]+@[A-Z0-9.-]/)) {
+if (document.getElementById("email").value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/)) {
     document.getElementById("emailErrorMsg").innerText = "adresse mail non valide";
     btn.disabled = true;
     return false;
 }
 
+if(document.getElementById("firstName").value =="" ){
+    btn.disabled = true;
+    return false;
+}
+
+if(document.getElementById("lastName").value =="" ){
+    btn.disabled = true;
+    return false;
+}
+if(document.getElementById("address").value =="" ){
+    btn.disabled = true;
+    return false;
+}
+if(document.getElementById("city").value =="" ){
+    btn.disabled = true;
+    return false;
+}
+if(document.getElementById("email").value =="" ){
+    btn.disabled = true;
+    return false;
+}
 
 else {
         document.getElementById("firstNameErrorMsg").innerText = "";
