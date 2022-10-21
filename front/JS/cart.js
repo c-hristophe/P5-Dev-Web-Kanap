@@ -246,75 +246,73 @@ elt.addEventListener('change', function() {
           
  // validation du formulaire 
 
-                
-  
+  document.addEventListener ('change',validate)          
+ let btn = document.getElementById('order');
 
-            document.getElementById("firstName").addEventListener("change", verif) 
-                function verif() {
-                    
-                    if (document.getElementById("firstName").value.match(/[0-9]/)) {
-                        document.getElementById("firstNameErrorMsg").innerText = "Veuillez saisir un prénom valide";
-                        return false;
-                    }
-                    else {document.getElementById("firstNameErrorMsg").innerText = "prénom valide";
-                        return true;
-                    }
-                }
-            
-            document.getElementById("lastName").addEventListener("change", verif2) 
-                function verif2() {
-                    
-                    if (document.getElementById("lastName").value.match(/[0-9]/)) {
-                        document.getElementById("lastNameErrorMsg").innerText = "Veuillez saisir un prénom valide";
-                        return false;
-                    }
-                    else {document.getElementById("lastNameErrorMsg").innerText = "prénom valide";
-                        return true;
-                    }
-                }
+ btn.disabled = true;
+     
+function validate() {
 
-                document.getElementById("address").addEventListener("change", verif3) 
-                function verif3() {
-                    
-                    if (document.getElementById("address").value.match(/[^a-zA-Z0-9]/)) {
-                        document.getElementById("addressErrorMsg").innerText = "Veuillez saisir une adresse valide";
-                        return false;
-                    }
-                    else {document.getElementById("addressErrorMsg").innerText = "adresse valide";
-                        return true;
-                    }
-                }
-                document.getElementById("city").addEventListener("change", verif4) 
-                function verif4() {
-                    
-                    if (document.getElementById("city").value.match(/[0-9]/)) {
-                        document.getElementById("cityErrorMsg").innerText = "Veuillez saisir une ville valide";
-                        return false;
-                    }
-                    else {document.getElementById("cityErrorMsg").innerText = "ville valide";
-                        return true;
-                    }
-                }
-
-                document.getElementById("email").addEventListener("change", verif5) 
-                function verif5() {
-                    
-                    if (document.getElementById("email").value.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)) {
-                        document.getElementById("emailErrorMsg").innerText = "adresse mail valide";
-                        return true;
-                    }
-                    else {
-                        document.getElementById("emailErrorMsg").innerText = "Entrez une adresse mail valide";
-                        return false;
-                    }
-                }
-
-            
-            
-document.getElementById("order").addEventListener("click", validate)
-     function validate() { 
-        window.open("confirmation.html");
+ if (document.getElementById("firstName").value.match(/[0-9]/)) {
+    document.getElementById("firstNameErrorMsg").innerText = "Veuillez saisir un prénom valide";
+    btn.disabled = true;
+    return false;
+  } 
+   
+if (document.getElementById("lastName").value.match(/[0-9]/)) {
+    document.getElementById("lastNameErrorMsg").innerText = "Veuillez saisir un nom valide";
+    btn.disabled = true;
+    return false;
 }
+
+if (document.getElementById("address").value.match(/[^a-z\-][^0-9]/)) {
+    document.getElementById("addressErrorMsg").innerText = "Veuillez saisir une adresse valide";
+    btn.disabled = true;
+    return false;
+}
+
+if (document.getElementById("city").value.match(/[0-9]/)) {
+    document.getElementById("cityErrorMsg").innerText = "Veuillez saisir une ville valide";
+    btn.disabled = true;
+    return false;
+}
+
+if (document.getElementById("email").value.match(/[A-Z0-9+_.-]+@[A-Z0-9.-]/)) {
+    document.getElementById("emailErrorMsg").innerText = "adresse mail non valide";
+    btn.disabled = true;
+    return false;
+}
+
+
+else {
+        document.getElementById("firstNameErrorMsg").innerText = "";
+        document.getElementById("lastNameErrorMsg").innerText = "";
+        document.getElementById("addressErrorMsg").innerText = "";
+        document.getElementById("cityErrorMsg").innerText = "";
+        document.getElementById("emailErrorMsg").innerText = "";
+
+        btn.disabled = false;
+        let prenom = document.getElementById("firstName").value;
+        localStorage.setItem('prenom', prenom)
+        let nom = document.getElementById("lastName").value;
+        localStorage.setItem('nom', nom)
+        let adresse = document.getElementById("address").value;
+        localStorage.setItem('adresse', adresse)
+        let ville = document.getElementById("city").value; 
+        localStorage.setItem('ville', ville) 
+        let email = document.getElementById("email").value;
+        localStorage.setItem('email', email)
+    
+        btn.addEventListener("click", open )
+        function open() {
+            window.open("confirmation.html");  
+        }      
+    }
+  
+}
+
+        
+
    
 
             

@@ -110,7 +110,7 @@ console.log(newItem);
 
  let gestionArticle = localStorage.getItem("obj");
  let gestionArticlepars = JSON.parse(gestionArticle); 
-            
+ console.log (gestionArticlepars)           
              let newArray = [];
                
              let uniqueObject = {};
@@ -118,9 +118,10 @@ console.log(newItem);
              for (let i in gestionArticlepars) {
        
                 let objTitle = gestionArticlepars[i]['nom'];
+                 console.log(objTitle)
                  
                 let objcolor = gestionArticlepars[i]['color'];
-                 
+                 console.log(objcolor)
                  let objQte = document.getElementById("quantity").value;
                  
                  uniqueObject[objTitle && objcolor] = gestionArticlepars[i];
@@ -129,7 +130,7 @@ console.log(newItem);
            
                 localStorage.setItem('objTitle',objTitle);
                 localStorage.setItem('objcolor',objcolor);
-                localStorage.setItem('objQte)',objQte)
+                
                     
              }
                
@@ -137,7 +138,8 @@ console.log(newItem);
                  newArray.push(uniqueObject[i]);
               
              }
-                 
+             
+             console.log(newArray)
              
  
              let objTitle = localStorage.getItem('objTitle');
@@ -145,11 +147,10 @@ console.log(newItem);
              let objcolor = localStorage.getItem('objcolor');
              let qteOld = localStorage.getItem('qteOld');
              console.log(objQte)
+             console.log(qteOld)
 ///////////////////////////////////
-             const index = newArray.findIndex(
-              (product) => product.nom == objTitle && product.color == objcolor
-              );
-
+            const index = newArray.findIndex( (element) => element.nom === objTitle && element.color === objcolor);
+//////////////
              console.log(index)
                 
                 if(index != -1) {
@@ -159,6 +160,8 @@ console.log(newItem);
                  color: objcolor
                 }
               }
+
+              
 //////////////////////////////////////////
 
 
