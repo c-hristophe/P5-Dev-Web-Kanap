@@ -7,7 +7,7 @@ let data = JSON.parse(objLinea);
 
 //définition des variables
 for (let pas = 0; pas < data.length; pas++) {
-let nom = data[pas].nom;
+let id = data[pas].id;
 let qte = data[pas].qte;
 
 localStorage.setItem ('qteOld', qte)
@@ -69,14 +69,14 @@ document.getElementsByClassName("cart__item__content");
 [ div4, div5 ].forEach(child => div3.appendChild(child));
 [ p3, input ].forEach(child => div4.appendChild(child));
 [ p4 ].forEach(child => div5.appendChild(child));
-[article].forEach(child => article.setAttribute("data-id", data[pas].nom));
+[article].forEach(child => article.setAttribute("data-id", data[pas].id));
 [article].forEach(child => article.setAttribute("data-color", data[pas].color));
 [input].forEach(child => input.setAttribute("name", "itemQuantity"));
 [input].forEach(child => input.setAttribute("min", "1"));
 [input].forEach(child => input.setAttribute("max", "100"));
 [input].forEach(child => input.setAttribute("value", data[pas].qte));
 
-fetch("http://localhost:3000/api/products/"+nom)
+fetch("http://localhost:3000/api/products/"+id)
 
 .then(function(res) {
   if (res.ok) {
@@ -146,7 +146,7 @@ function removeDummy() {
 
             let productInLocalStorage = localStorage.getItem("obj");
             let productInLocalStoragepars = JSON.parse(productInLocalStorage);     
-            productInLocalStoragepars = productInLocalStoragepars.filter(item=> ((item.nom,item.color) !== (el3,el4)));
+            productInLocalStoragepars = productInLocalStoragepars.filter(item=> ((item.id,item.color) !== (el3,el4)));
             filteredStr = JSON.stringify(productInLocalStoragepars); 
                        
             localStorage.setItem("obj",filteredStr);
@@ -174,12 +174,12 @@ elt.addEventListener('change', function() {
         let productInLocalStoragepars = JSON.parse(productInLocalStorage);     
      
         const index = productInLocalStoragepars.findIndex(
-            (num) => num.nom == elTitle && num.color == elColor
+            (num) => num.id == elTitle && num.color == elColor
           );
           console.log(index)
           
           productInLocalStoragepars[index] = {
-           nom: elTitle,
+           id: elTitle,
            qte: el5,
            color: elColor
           }
@@ -202,7 +202,7 @@ elt.addEventListener('change', function() {
             let totalPanierpar = JSON.parse (totalPanier)
             console.log(totalPanierpar)
             for (let pas = 0; pas < totalPanierpar.length; pas++) {
-            fetch("http://localhost:3000/api/products/" + totalPanierpar[pas].nom)
+            fetch("http://localhost:3000/api/products/" + totalPanierpar[pas].id)
 
             .then(function(res) {
             if (res.ok) {
