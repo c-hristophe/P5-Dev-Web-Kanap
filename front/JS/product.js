@@ -47,41 +47,29 @@ img.src = data.imageUrl;
 });
 
 //vérifier le remplissage des champs 
-let btn = document.getElementById('addToCart');
-
-btn.addEventListener('click',verif_saisie);
-function verif_saisie()
-{
-  var qte = parseInt(document.getElementById("quantity").value);
-  var color = parseInt(document.getElementById("colors").value)
-  this.qteArticle = qte;
-  this.colArticle = color;
-
-if (qte == "0")
-
-{ alert("Veuillez saisir une quantité");
-
-return false;
-}
-
-if (!color) {
-  alert('Veuillez choisir une couleur');
-  
-  return false;
-} 
- //message utilisateur si tous les champs sont remplis
-else (alert("Ajouté à votre panier !"))
-return true;
-}
 
 
 //écriute aprés click sur "ajouter au panier"
 const elt = document.querySelector('#addToCart'); 
 elt.addEventListener('click',panier);
-if (true) {
+
 function panier(){
     let qte = parseInt(document.getElementById("quantity").value);
     let color = document.querySelector('#colors').value;
+     if(!color) {
+
+        alert("Veuillez sélectionner une couleur");
+        
+        return false;
+     }
+     if(qte == "0") {
+       
+            alert("Veuillez sélectionner une quantité");
+            
+            return false;
+         }
+   
+    
     let newItem = [{
       id,
       qte,
@@ -90,64 +78,44 @@ function panier(){
     console.log(newItem);
       let productInLocalStorage = localStorage.getItem("obj");
       let productInLocalStorageParse = JSON.parse(productInLocalStorage);
+      
         //s'il y a des produits dans le local storage  
         if(productInLocalStorage){      
             var finalObj = productInLocalStorageParse.concat(newItem);
-            
             let newArray = [];
-                  
             let uniqueObject = {};
-      
-                for (let i in finalObj) {
-          
-                    let objTitle = finalObj[i]['id'];
-                    
-                    let objcolor = finalObj[i]['color'];
-                    
-                    let objQte = document.getElementById("quantity").value;
-                    
-                    uniqueObject[objTitle && objcolor] = finalObj[i];
-
-                    
-                }
-                for (let i in uniqueObject) {
-                    newArray.push(uniqueObject[i]);
-                
-                }
-                let qteOld = localStorage.getItem('qteOld');
-                let objTitle = id;
-                let objcolor = color;
-                let objQte = qte
-
-                const index = newArray.findIndex( (element) => ((element.id === objTitle) && (element.color === objcolor)));
+            let qteOld = localStorage.getItem('qteOld');
+            console.log (productInLocalStorageParse)
+            const index = productInLocalStorageParse.findIndex( (element) => ((element.id === id) && (element.color === color)));
 
                 console.log(index)
-                
-                    if(index != -1) {
-                    newArray[index] = {
-                    id: objTitle,
-                    qte: Number(objQte) + Number(qteOld),
-                    color: objcolor
-                    };
+     ////////////////////           
+            if(index != -1) {
+            finalObj[index] = {
+            id: id,
+            qte: Number(qte) + Number(qteOld),
+            color: color
+              };
+            finalObj.splice(-1,1); 
+            }
 
-                    let newArrayStr= JSON.stringify(newArray);
-                    localStorage.setItem("obj",newArrayStr);    
-
-                    console.log(newArray)
-                  }
+              console.log(finalObj)            
+            
+                let finalObjStr = JSON.stringify(finalObj)
+                localStorage.setItem("obj",finalObjStr);    
+        }
                    
-}
-                  
-                      
-                
-          
     // s'il n'y a pas un produit dans le local storage  //
          else{
-                    productInLocalStorage = []
-                    
-                    let panierStr = JSON.stringify(newItem);
-                    localStorage.setItem("obj",panierStr);       
-                
-          }
-}
-}
+          let panierNew = JSON.stringify(newItem)
+          localStorage.setItem("obj",panierNew);
+            
+          return true;
+        }
+          
+          alert("Ajouté à votre panier !");
+                         
+    }            
+          
+
+
