@@ -1,9 +1,6 @@
 //importation du Json et des données 
-
 let objLinea = localStorage.getItem("obj");
 let data = JSON.parse(objLinea);
-
-
 
 //définition des variables
 for (let pas = 0; pas < data.length; pas++) {
@@ -71,6 +68,7 @@ document.getElementsByClassName("cart__item__content");
 [ p4 ].forEach(child => div5.appendChild(child));
 [article].forEach(child => article.setAttribute("data-id", data[pas].id));
 [article].forEach(child => article.setAttribute("data-color", data[pas].color));
+[input].forEach(child => input.setAttribute("type", "number"));
 [input].forEach(child => input.setAttribute("name", "itemQuantity"));
 [input].forEach(child => input.setAttribute("min", "1"));
 [input].forEach(child => input.setAttribute("max", "100"));
@@ -160,9 +158,9 @@ function removeDummy() {
 
 //modifier la quantité
 for (let i=0; i<100; i++){
-var elt = document.getElementsByName("itemQuantity")[i];
-elt.addEventListener('change', function() {
-
+let elt = document.getElementsByClassName ("itemQuantity")[i];
+elt.addEventListener('change', change )
+function change(){
         let el5 = this.value;
         console.log(el5)
         localStorage.setItem('qteChange', el5)
@@ -189,8 +187,8 @@ elt.addEventListener('change', function() {
         localStorage.setItem("obj",filteredStr);
         console.log(filteredStr)
         location.reload();
+        }
 
-})
 }
     
 })
@@ -212,20 +210,25 @@ elt.addEventListener('change', function() {
             })
             //calcul du total des prix
             .then(function(valuePrice) {
-               
+                
                 let mul = 0;
                 let add = 0;
-                
                 let value = valuePrice.price;
+                console.log(value)
+
+                
                 mul =  value* Number(totalPanierpar[pas].qte);
                 console.log(mul)
-                for (let pas = 0; pas < totalPanierpar.length; pas++) {
+
+                //////////////////
+                for (let i = 0; i < totalPanierpar.length; i++) {
                 add += mul;
-                }
-                console.log(add) 
+                
+                /////////////////
+                console.log(add)
                 let span = document.querySelector("#totalPrice"); 
                 span.innerText = add.toFixed(2);
-                   
+                }
               })
             // calcul du total des quantités
             .then(function getNumberProducts(){
@@ -234,7 +237,7 @@ elt.addEventListener('change', function() {
                 
                 for (let i = 0; i < totalPanierpar.length; i++) {
                   sum += Number(totalPanierpar[i].qte);
-                  console.log(sum) 
+                 
                 
                   let span = document.querySelector("#totalQuantity"); 
                   span.innerText = sum;
@@ -253,31 +256,31 @@ elt.addEventListener('change', function() {
      
 function validate() {
 
- if (document.getElementById("firstName").value.match(/[0-9]/)) {
+ if (document.getElementById("firstName").value.match(/^[^a-z ,.'-]+$/)) {
     document.getElementById("firstNameErrorMsg").innerText = "Veuillez saisir un prénom valide";
     btn.disabled = true;
     return false;
   } 
    
-if (document.getElementById("lastName").value.match(/[0-9]/)) {
+if (document.getElementById("lastName").value.match(/^[^a-z ,.'-]+$/)) {
     document.getElementById("lastNameErrorMsg").innerText = "Veuillez saisir un nom valide";
     btn.disabled = true;
     return false;
 }
 
-if (document.getElementById("address").value.match(/[@]/)) {
+if (document.getElementById("address").value.match(/^[^a-zA-Z0-9\s,'-]*$/)) {
     document.getElementById("addressErrorMsg").innerText = "Veuillez saisir une adresse valide";
     btn.disabled = true;
     return false;
 }
 
-if (document.getElementById("city").value.match(/[0-9]/)) {
+if (document.getElementById("city").value.match(/^[^a-zA-Z]+(?:[^\s-][^a-zA-Z]+)*$/)) {
     document.getElementById("cityErrorMsg").innerText = "Veuillez saisir une ville valide";
     btn.disabled = true;
     return false;
 }
 
-if (document.getElementById("email").value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/)) {
+if (document.getElementById("email").value.match(/^[^A-Z0-9._%+-]+@[^A-Z0-9.-]+\.[^A-Z]{2,}$/)) {
     document.getElementById("emailErrorMsg").innerText = "adresse mail non valide";
     btn.disabled = true;
     return false;
@@ -314,27 +317,74 @@ else {
 
         btn.disabled = false;
         let prenom = document.getElementById("firstName").value;
-        localStorage.setItem('prenom', prenom)
         let nom = document.getElementById("lastName").value;
-        localStorage.setItem('nom', nom)
         let adresse = document.getElementById("address").value;
-        localStorage.setItem('adresse', adresse)
         let ville = document.getElementById("city").value; 
-        localStorage.setItem('ville', ville) 
         let email = document.getElementById("email").value;
-        localStorage.setItem('email', email)
-    
-        btn.addEventListener("click", open )
-        function open() {
-            window.open("confirmation.html");  
-        }      
+        
+        
+        let products = localStorage.getItem('obj');
+    const data= {
+    contact : {
+        firstName: prenom,
+        lastName: nom,
+        address: adresse,
+        city: ville,
+        email: email,
+    },
+    products: products,
     }
+    console.log (data)
+
+    let commande = JSON.stringify(data)
+    console.log (commande)
+    
+    fetch("http://localhost:3000/api/products/order", {
+            method: "POST",
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            mode: 'cors',
+            body: commande,
+            })
+            .then(function(res) {
+                if (res.ok) {
+                    return res.json();
+                }
+              alert(res.json())
+                })
+                
+             
+    // envoyer le résultat à l'API
+    
+    //     btn.addEventListener("click", openSend )
+    //     function openSend() {
+    //     fetch("http://localhost:3000/api/products/order", {
+    //         method: "POST",
+    //         headers: {
+    //         'Accept': 'application/json',
+    //         'Content-Type': 'application/json'
+    //         },
+    //         mode: 'cors',
+    //         body: commande,
+    //         })
+    //         .then(function(res) {
+    //             if (res.ok) {
+    //                 return res.json();
+    //             }
+    //           alert(res.json())
+    //             })
+                
+    //         .then()   
+        
+    // }
   
 }
 
         
 
-   
+}
 
             
             
