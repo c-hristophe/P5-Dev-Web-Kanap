@@ -4,11 +4,11 @@ let data = JSON.parse(objLinea);
 
 //définition des variables
 for (let pas = 0; pas < data.length; pas++) {
-let id = data[pas].id;
+let _id = data[pas]._id;
 let qte = data[pas].qte;
 
 localStorage.setItem ('qteOld', qte)
-let color = data[pas].color;
+let colors = data[pas].colors;
 
 // création des éléments
 
@@ -66,15 +66,15 @@ document.getElementsByClassName("cart__item__content");
 [ div4, div5 ].forEach(child => div3.appendChild(child));
 [ p3, input ].forEach(child => div4.appendChild(child));
 [ p4 ].forEach(child => div5.appendChild(child));
-[article].forEach(child => article.setAttribute("data-id", data[pas].id));
-[article].forEach(child => article.setAttribute("data-color", data[pas].color));
+[article].forEach(child => article.setAttribute("data-id", data[pas]._id));
+[article].forEach(child => article.setAttribute("data-color", data[pas].colors));
 [input].forEach(child => input.setAttribute("type", "number"));
 [input].forEach(child => input.setAttribute("name", "itemQuantity"));
 [input].forEach(child => input.setAttribute("min", "1"));
 [input].forEach(child => input.setAttribute("max", "100"));
 [input].forEach(child => input.setAttribute("value", data[pas].qte));
 
-fetch("http://localhost:3000/api/products/"+id)
+fetch("http://localhost:3000/api/products/"+_id)
 
 .then(function(res) {
   if (res.ok) {
@@ -95,7 +95,7 @@ const h2Parent = document.querySelector("cart__item__content__description");
     
 //couleur
 const pParent = document.querySelector("cart__item__content__description"); 
-    p.innerText = color;
+    p.innerText = colors;
 
 //prix
 const p2Parent = document.querySelector("cart__item__content__description"); 
@@ -126,25 +126,12 @@ function removeDummy() {
 
         function view() {
             
-            localStorage.removeItem('el1');
-            localStorage.removeItem('el2');
             let el1 = this.dataset.id ; 
             let el2 = this.dataset.color ; 
 
-            localStorage.setItem("el1", el1);
-            localStorage.setItem("el2", el2);
- 
-            console.log(el1);
-            console.log(el2);
-
-            let el3 = localStorage.getItem("el1");
-            let el4 = localStorage.getItem("el2");
-            console.log (el3)
-            console.log (el4)
-
             let productInLocalStorage = localStorage.getItem("obj");
             let productInLocalStoragepars = JSON.parse(productInLocalStorage);     
-            productInLocalStoragepars = productInLocalStoragepars.filter(item=> ((item.id,item.color) !== (el3,el4)));
+            productInLocalStoragepars = productInLocalStoragepars.filter(item=> ((item._id,item.colors) !== (el1,el2)));
             filteredStr = JSON.stringify(productInLocalStoragepars); 
                        
             localStorage.setItem("obj",filteredStr);
@@ -157,29 +144,26 @@ function removeDummy() {
 }
 
 //modifier la quantité
-for (let i=0; i<100; i++){
+for (let i=0; i<totalPanierpar.length; i++){
 let elt = document.getElementsByClassName ("itemQuantity")[i];
 elt.addEventListener('change', change )
 function change(){
         let el5 = this.value;
-        console.log(el5)
-        localStorage.setItem('qteChange', el5)
-        
         let article = document.getElementsByClassName('cart__item')[i]
-        let elColor = article.dataset.color;
+        let elColors = article.dataset.color;
         let elTitle = article.dataset.id
         let productInLocalStorage = localStorage.getItem("obj");
         let productInLocalStoragepars = JSON.parse(productInLocalStorage);     
      
         const index = productInLocalStoragepars.findIndex(
-            (num) => num.id == elTitle && num.color == elColor
+            (num) => num._id == elTitle && num.colors == elColors
           );
           console.log(index)
           
           productInLocalStoragepars[index] = {
-           id: elTitle,
+           _id: elTitle,
            qte: el5,
-           color: elColor
+           colors: elColors
           }
         
         filteredStr = JSON.stringify(productInLocalStoragepars); 
@@ -200,7 +184,7 @@ function change(){
             let totalPanierpar = JSON.parse (totalPanier)
             console.log(totalPanierpar)
             for (let pas = 0; pas < totalPanierpar.length; pas++) {
-            fetch("http://localhost:3000/api/products/" + totalPanierpar[pas].id)
+            fetch("http://localhost:3000/api/products/" + totalPanierpar[pas]._id)
 
             .then(function(res) {
             if (res.ok) {
@@ -210,25 +194,22 @@ function change(){
             })
             //calcul du total des prix
             .then(function(valuePrice) {
+                let total = 0;
+            ////////////////
+             
+             for (let i = 0; i < totalPanierpar.length; i++) {
+     
+                    total += valuePrice.price * Number(document.querySelectorAll(".itemQuantity")[i].value);
+                    console.log(total);
                 
-                let mul = 0;
-                let add = 0;
-                let value = valuePrice.price;
-                console.log(value)
-
+             }
+            
+            ///////////////// 
+            
+            let span = document.querySelector("#totalPrice"); 
+            span.innerText = total;
                 
-                mul =  value* Number(totalPanierpar[pas].qte);
-                console.log(mul)
-
-                //////////////////
-                for (let i = 0; i < totalPanierpar.length; i++) {
-                add += mul;
-                
-                /////////////////
-                console.log(add)
-                let span = document.querySelector("#totalPrice"); 
-                span.innerText = add.toFixed(2);
-                }
+               
               })
             // calcul du total des quantités
             .then(function getNumberProducts(){
@@ -237,16 +218,16 @@ function change(){
                 
                 for (let i = 0; i < totalPanierpar.length; i++) {
                   sum += Number(totalPanierpar[i].qte);
-                 
-                
+                 console.log (sum)
                   let span = document.querySelector("#totalQuantity"); 
                   span.innerText = sum;
                   
-            }})
+            }
+            })
             
             
             }
-          
+            
  // validation du formulaire 
 
   document.addEventListener ('change',validate)          
@@ -256,64 +237,67 @@ function change(){
      
 function validate() {
 
- if (document.getElementById("firstName").value.match(/^[^a-z ,.'-]+$/)) {
+
+if(document.getElementById("firstName").value =="" ){
     document.getElementById("firstNameErrorMsg").innerText = "Veuillez saisir un prénom valide";
     btn.disabled = true;
     return false;
-  } 
-   
-if (document.getElementById("lastName").value.match(/^[^a-z ,.'-]+$/)) {
+}
+else {
+    document.getElementById("firstNameErrorMsg").innerText =""
+}
+
+if(document.getElementById("lastName").value =="" ){
     document.getElementById("lastNameErrorMsg").innerText = "Veuillez saisir un nom valide";
     btn.disabled = true;
     return false;
 }
-
-if (document.getElementById("address").value.match(/^[^a-zA-Z0-9\s,'-]*$/)) {
+else {
+    document.getElementById("lastNameErrorMsg").innerText =""
+}
+if(document.getElementById("address").value =="" ){
     document.getElementById("addressErrorMsg").innerText = "Veuillez saisir une adresse valide";
     btn.disabled = true;
     return false;
 }
-
-if (document.getElementById("city").value.match(/^[^a-zA-Z]+(?:[^\s-][^a-zA-Z]+)*$/)) {
+else {
+    document.getElementById("addressErrorMsg").innerText = "";
+}
+if(document.getElementById("city").value =="" ){
     document.getElementById("cityErrorMsg").innerText = "Veuillez saisir une ville valide";
     btn.disabled = true;
     return false;
 }
-
-if (document.getElementById("email").value.match(/^[^A-Z0-9._%+-]+@[^A-Z0-9.-]+\.[^A-Z]{2,}$/)) {
-    document.getElementById("emailErrorMsg").innerText = "adresse mail non valide";
-    btn.disabled = true;
-    return false;
-}
-
-if(document.getElementById("firstName").value =="" ){
-    btn.disabled = true;
-    return false;
-}
-
-if(document.getElementById("lastName").value =="" ){
-    btn.disabled = true;
-    return false;
-}
-if(document.getElementById("address").value =="" ){
-    btn.disabled = true;
-    return false;
-}
-if(document.getElementById("city").value =="" ){
-    btn.disabled = true;
-    return false;
+else {
+    document.getElementById("cityErrorMsg").innerText =""
 }
 if(document.getElementById("email").value =="" ){
+    document.getElementById("emailErrorMsg").innerText = "Veuillez saisir un email valide";
     btn.disabled = true;
     return false;
 }
-
 else {
-        document.getElementById("firstNameErrorMsg").innerText = "";
-        document.getElementById("lastNameErrorMsg").innerText = "";
-        document.getElementById("addressErrorMsg").innerText = "";
-        document.getElementById("cityErrorMsg").innerText = "";
-        document.getElementById("emailErrorMsg").innerText = "";
+    document.getElementById("emailErrorMsg").innerText =""
+}
+
+if (document.getElementById("email").value.indexOf("@", 0) < 0)                 
+{ 
+    document.getElementById("emailErrorMsg").innerText = "Veuillez saisir un email valide";
+    btn.disabled = true;
+    return false;
+}    
+else {
+    document.getElementById("emailErrorMsg").innerText =""
+}
+
+if (document.getElementById("email").value.indexOf(".", 0) < 0)                 
+{ 
+    document.getElementById("emailErrorMsg").innerText = "Veuillez saisir un email valide";
+    btn.disabled = true;
+    return false;
+}    
+else {
+    document.getElementById("emailErrorMsg").innerText =""
 
         btn.disabled = false;
         let prenom = document.getElementById("firstName").value;
@@ -322,44 +306,48 @@ else {
         let ville = document.getElementById("city").value; 
         let email = document.getElementById("email").value;
         
-        
         let products = localStorage.getItem('obj');
-    const data= {
-    contact : {
-        firstName: prenom,
-        lastName: nom,
-        address: adresse,
-        city: ville,
-        email: email,
-    },
-    products: products,
-    }
-    console.log (data)
-
-    let commande = JSON.stringify(data)
-    console.log (commande)
+        let productsPar = JSON.parse(products);
     
-    fetch("http://localhost:3000/api/products/order", {
+        const data= {
+            contact : {
+                firstName: prenom,
+                lastName: nom,
+                address: adresse,
+                city: ville,
+                email: email,
+            },
+            products: productsPar,
+        }
+       
+
+        let order = JSON.stringify(data)
+        console.log (order)
+
+        // envoyer le résultat à l'API
+    //    btn.addEventListener("click", openSend )
+    // function openSend() {  
+    fetch("http://localhost:3000/api/products/order/", {
             method: "POST",
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
             },
-            mode: 'cors',
-            body: commande,
+            body: order
             })
             .then(function(res) {
                 if (res.ok) {
                     return res.json();
                 }
-              alert(res.json())
+              alert(res.json()+TypeError)
                 })
                 
-             
-    // envoyer le résultat à l'API
-    
-    //     btn.addEventListener("click", openSend )
-    //     function openSend() {
+             .then(function open() {
+                window.location.href="confirmation.html"
+             }) 
+
+    // }
+    //    
     //     fetch("http://localhost:3000/api/products/order", {
     //         method: "POST",
     //         headers: {
@@ -376,9 +364,9 @@ else {
     //           alert(res.json())
     //             })
                 
-    //         .then()   
+    //           
         
-    // }
+    // 
   
 }
 

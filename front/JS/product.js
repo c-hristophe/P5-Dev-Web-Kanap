@@ -1,9 +1,9 @@
 var str = window.location.href;
 var url = new URL(str);
-var id = url.searchParams.get("id");
-console.log(id);
+var _id = url.searchParams.get("id");
+console.log(_id);
 
-fetch("http://localhost:3000/api/products/"+id)
+fetch("http://localhost:3000/api/products/"+_id)
 .then(function(res) {
   if (res.ok) {
     return res.json();
@@ -55,8 +55,8 @@ elt.addEventListener('click',panier);
 
 function panier(){
     let qte = parseInt(document.getElementById("quantity").value);
-    let color = document.querySelector('#colors').value;
-     if(!color) {
+    let colors = document.querySelector('#colors').value;
+     if(!colors) {
 
         alert("Veuillez sélectionner une couleur");
         
@@ -71,9 +71,9 @@ function panier(){
    
     
     let newItem = [{
-      id,
+      _id,
       qte,
-      color,  
+      colors,  
     }]
     console.log(newItem);
       let productInLocalStorage = localStorage.getItem("obj");
@@ -84,17 +84,19 @@ function panier(){
             var finalObj = productInLocalStorageParse.concat(newItem);
             let newArray = [];
             let uniqueObject = {};
-            let qteOld = localStorage.getItem('qteOld');
-            console.log (productInLocalStorageParse)
-            const index = productInLocalStorageParse.findIndex( (element) => ((element.id === id) && (element.color === color)));
 
-                console.log(index)
-     ////////////////////           
+            console.log (productInLocalStorageParse)
+            const index = productInLocalStorageParse.findIndex( (element) => ((element._id === _id) && (element.colors === colors)));
+
+            console.log(index)
+            
             if(index != -1) {
+            let qteOld = productInLocalStorageParse[index].qte
+        
             finalObj[index] = {
-            id: id,
+            _id: _id,
             qte: Number(qte) + Number(qteOld),
-            color: color
+            colors: colors
               };
             finalObj.splice(-1,1); 
             }
