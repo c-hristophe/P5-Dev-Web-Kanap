@@ -1,9 +1,9 @@
 var str = window.location.href;
 var url = new URL(str);
-var _id = url.searchParams.get("id");
-console.log(_id);
+var id = url.searchParams.get("id");
+console.log(id);
 
-fetch("http://localhost:3000/api/products/"+_id)
+fetch("http://localhost:3000/api/products/"+id)
 .then(function(res) {
   if (res.ok) {
     return res.json();
@@ -55,8 +55,8 @@ elt.addEventListener('click',panier);
 
 function panier(){
     let qte = parseInt(document.getElementById("quantity").value);
-    let colors = document.querySelector('#colors').value;
-     if(!colors) {
+    let color = document.querySelector('#colors').value;
+     if(!color) {
 
         alert("Veuillez sélectionner une couleur");
         
@@ -71,9 +71,9 @@ function panier(){
    
     
     let newItem = [{
-      _id,
+      id,
       qte,
-      colors,  
+      color,  
     }]
     console.log(newItem);
       let productInLocalStorage = localStorage.getItem("obj");
@@ -86,7 +86,7 @@ function panier(){
             let uniqueObject = {};
 
             console.log (productInLocalStorageParse)
-            const index = productInLocalStorageParse.findIndex( (element) => ((element._id === _id) && (element.colors === colors)));
+            const index = productInLocalStorageParse.findIndex( (element) => ((element.id === id) && (element.color === color)));
 
             console.log(index)
             
@@ -94,9 +94,9 @@ function panier(){
             let qteOld = productInLocalStorageParse[index].qte
         
             finalObj[index] = {
-            _id: _id,
+            id: id,
             qte: Number(qte) + Number(qteOld),
-            colors: colors
+            color: color
               };
             finalObj.splice(-1,1); 
             }

@@ -4,11 +4,11 @@ let data = JSON.parse(objLinea);
 
 //définition des variables
 for (let pas = 0; pas < data.length; pas++) {
-let _id = data[pas]._id;
+let id = data[pas].id;
 let qte = data[pas].qte;
 
 localStorage.setItem ('qteOld', qte)
-let colors = data[pas].colors;
+let color = data[pas].color;
 
 // création des éléments
 
@@ -66,15 +66,15 @@ document.getElementsByClassName("cart__item__content");
 [ div4, div5 ].forEach(child => div3.appendChild(child));
 [ p3, input ].forEach(child => div4.appendChild(child));
 [ p4 ].forEach(child => div5.appendChild(child));
-[article].forEach(child => article.setAttribute("data-id", data[pas]._id));
-[article].forEach(child => article.setAttribute("data-color", data[pas].colors));
+[article].forEach(child => article.setAttribute("data-id", data[pas].id));
+[article].forEach(child => article.setAttribute("data-color", data[pas].color));
 [input].forEach(child => input.setAttribute("type", "number"));
 [input].forEach(child => input.setAttribute("name", "itemQuantity"));
 [input].forEach(child => input.setAttribute("min", "1"));
 [input].forEach(child => input.setAttribute("max", "100"));
 [input].forEach(child => input.setAttribute("value", data[pas].qte));
 
-fetch("http://localhost:3000/api/products/"+_id)
+fetch("http://localhost:3000/api/products/"+id)
 
 .then(function(res) {
   if (res.ok) {
@@ -95,7 +95,7 @@ const h2Parent = document.querySelector("cart__item__content__description");
     
 //couleur
 const pParent = document.querySelector("cart__item__content__description"); 
-    p.innerText = colors;
+    p.innerText = color;
 
 //prix
 const p2Parent = document.querySelector("cart__item__content__description"); 
@@ -131,7 +131,7 @@ function removeDummy() {
 
             let productInLocalStorage = localStorage.getItem("obj");
             let productInLocalStoragepars = JSON.parse(productInLocalStorage);     
-            productInLocalStoragepars = productInLocalStoragepars.filter(item=> ((item._id,item.colors) !== (el1,el2)));
+            productInLocalStoragepars = productInLocalStoragepars.filter(item=> ((item.id,item.color) !== (el1,el2)));
             filteredStr = JSON.stringify(productInLocalStoragepars); 
                        
             localStorage.setItem("obj",filteredStr);
@@ -150,20 +150,20 @@ elt.addEventListener('change', change )
 function change(){
         let el5 = this.value;
         let article = document.getElementsByClassName('cart__item')[i]
-        let elColors = article.dataset.color;
+        let elColor = article.dataset.color;
         let elTitle = article.dataset.id
         let productInLocalStorage = localStorage.getItem("obj");
         let productInLocalStoragepars = JSON.parse(productInLocalStorage);     
      
         const index = productInLocalStoragepars.findIndex(
-            (num) => num._id == elTitle && num.colors == elColors
+            (num) => num.id == elTitle && num.color == elColor
           );
           console.log(index)
           
           productInLocalStoragepars[index] = {
-           _id: elTitle,
+           id: elTitle,
            qte: el5,
-           colors: elColors
+           color: elColor
           }
         
         filteredStr = JSON.stringify(productInLocalStoragepars); 
@@ -179,12 +179,12 @@ function change(){
 
 }
 // remplir total qte et prix
-
+            let totalToDisplay=0
             let totalPanier = localStorage.getItem('obj')
             let totalPanierpar = JSON.parse (totalPanier)
             console.log(totalPanierpar)
             for (let pas = 0; pas < totalPanierpar.length; pas++) {
-            fetch("http://localhost:3000/api/products/" + totalPanierpar[pas]._id)
+            fetch("http://localhost:3000/api/products/" + totalPanierpar[pas].id)
 
             .then(function(res) {
             if (res.ok) {
@@ -192,25 +192,36 @@ function change(){
             }
           
             })
+
             //calcul du total des prix
-            .then(function(valuePrice) {
-                let total = 0;
             ////////////////
-             
-             for (let i = 0; i < totalPanierpar.length; i++) {
-     
-                    total += valuePrice.price * Number(document.querySelectorAll(".itemQuantity")[i].value);
-                    console.log(total);
+            .then(function(valuePrice) {
                 
-             }
-            
-            ///////////////// 
-            
-            let span = document.querySelector("#totalPrice"); 
-            span.innerText = total;
+                let value = 0
                 
+                value = valuePrice.price
+                
+                qte = document.querySelectorAll(".itemQuantity")[pas].value
+                
+                let total = 0
                
+                total=value*qte
+               
+                
+
+                console.log (total)
+
+                totalToDisplay += Number(total)
+                console.log(totalToDisplay)
+
+                let span = document.querySelector("#totalPrice"); 
+                span.innerText = totalToDisplay;    
+                
+                //////////////////
               })
+              
+              
+              
             // calcul du total des quantités
             .then(function getNumberProducts(){
 
@@ -218,7 +229,7 @@ function change(){
                 
                 for (let i = 0; i < totalPanierpar.length; i++) {
                   sum += Number(totalPanierpar[i].qte);
-                 console.log (sum)
+                 
                   let span = document.querySelector("#totalQuantity"); 
                   span.innerText = sum;
                   
@@ -227,7 +238,11 @@ function change(){
             
             
             }
+
+        function displayTotal () {
             
+                totalToDisplay 
+        }
  // validation du formulaire 
 
   document.addEventListener ('change',validate)          
@@ -297,9 +312,12 @@ if (document.getElementById("email").value.indexOf(".", 0) < 0)
     return false;
 }    
 else {
+    btn.disabled = false;
     document.getElementById("emailErrorMsg").innerText =""
 
-        btn.disabled = false;
+    // document.addEventListener ('click', order )
+    // function order() {
+
         let prenom = document.getElementById("firstName").value;
         let nom = document.getElementById("lastName").value;
         let adresse = document.getElementById("address").value;
@@ -309,72 +327,52 @@ else {
         let products = localStorage.getItem('obj');
         let productsPar = JSON.parse(products);
     
-        const data= {
+
+       
+        let clientOrder = {
             contact : {
                 firstName: prenom,
-                lastName: nom,
-                address: adresse,
+                latName: nom,
+                address : adresse,
                 city: ville,
                 email: email,
             },
-            products: productsPar,
+            products : productsPar
         }
-       
 
-        let order = JSON.stringify(data)
+        let order = JSON.stringify(clientOrder)
         console.log (order)
 
-        // envoyer le résultat à l'API
-    //    btn.addEventListener("click", openSend )
-    // function openSend() {  
-    fetch("http://localhost:3000/api/products/order/", {
-            method: "POST",
+        
+        fetch('https://jsonplaceholder.typicode.com/posts', {
+            method: 'POST',
+            body: JSON.stringify(clientOrder),
             headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-            },
-            body: order
+                'Content-type': 'application/json; charset=UTF-8',
+            }
             })
-            .then(function(res) {
-                if (res.ok) {
-                    return res.json();
-                }
-              alert(res.json()+TypeError)
-                })
-                
-             .then(function open() {
-                window.location.href="confirmation.html"
-             }) 
-
-    // }
-    //    
-    //     fetch("http://localhost:3000/api/products/order", {
-    //         method: "POST",
-    //         headers: {
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json'
-    //         },
-    //         mode: 'cors',
-    //         body: commande,
-    //         })
-    //         .then(function(res) {
-    //             if (res.ok) {
-    //                 return res.json();
-    //             }
-    //           alert(res.json())
-    //             })
-                
-    //           
-        
-    // 
-  
-}
-
-        
-
-}
-
+            .then(function(response){ 
+            return response.json()})
+            .then(function(data){
+                console.log(data)
+                console.log(Object.values(data))
+                console.log(data.id)
+                let id = data.id
+               
+            })
             
+            .catch(error => console.error('Error:', error)) 
+
+            window.open("confirmation.html","confirmation","menubar=no, status=no, width=100px");
+            a.href = `./confirmation.html?id=${value[pas]._id}`
+            
+}
+}
+
+// }
+
+
+
             
           
 
