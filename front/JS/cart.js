@@ -245,7 +245,7 @@ function change(){
         }
  // validation du formulaire 
 
-  document.addEventListener ('change',validate)          
+ document.addEventListener ('change',validate)          
  let btn = document.getElementById('order');
 
  btn.disabled = true;
@@ -358,14 +358,17 @@ else {
                 console.log(Object.values(data))
                 console.log(data.id)
                 let id = data.id
-               
+                window.href= "confirmation.html?"+id
+                window.open("confirmation.html?id="+id,"confirmation","menubar=no, status=no, width=100px");
             })
             
             .catch(error => console.error('Error:', error)) 
-
-            window.open("confirmation.html","confirmation","menubar=no, status=no, width=100px");
-            a.href = `./confirmation.html?id=${value[pas]._id}`
             
+            
+            
+            
+            
+        
 }
 }
 
