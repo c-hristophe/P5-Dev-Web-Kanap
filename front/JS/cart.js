@@ -315,8 +315,6 @@ else {
     btn.disabled = false;
     document.getElementById("emailErrorMsg").innerText =""
 
-    // document.addEventListener ('click', order )
-    // function order() {
 
         let prenom = document.getElementById("firstName").value;
         let nom = document.getElementById("lastName").value;
@@ -326,53 +324,66 @@ else {
         
         let products = localStorage.getItem('obj');
         let productsPar = JSON.parse(products);
-    
-
+        console.log(productsPar) 
+        let valTab = []
+        for (let i=0; i<productsPar.length; i++){
+        delete productsPar[i].qte
+        delete productsPar[i].color
+        
+        let val = Object.values(productsPar[i])
+        valTab.push(val)
        
-        let clientOrder = {
+        let productsParStr = JSON.stringify(productsPar)
+        localStorage.setItem('objFinal',productsParStr)
+        
+        }
+        console.log(valTab)
+        
+      
+        
+        let body = {
             contact : {
                 firstName: prenom,
-                latName: nom,
+                lastName: nom,
                 address : adresse,
                 city: ville,
                 email: email,
             },
-            products : productsPar
+            products : valTab
         }
-
-        let order = JSON.stringify(clientOrder)
+        
+        let order = JSON.stringify(body)
         console.log (order)
 
         
-        fetch('https://jsonplaceholder.typicode.com/posts', {
+        fetch('http://localhost:3000/api/products/order/', {
             method: 'POST',
-            body: JSON.stringify(clientOrder),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-            }
+            },
+            body: order,
             })
+
             .then(function(response){ 
             return response.json()})
+             
             .then(function(data){
-                console.log(data)
+               
                 console.log(Object.values(data))
-                console.log(data.id)
-                let id = data.id
-                window.href= "confirmation.html?"+id
-                window.open("confirmation.html?id="+id,"confirmation","menubar=no, status=no, width=100px");
+                let id = Object.values(data)[2];
+                console.log (id)
+                
+                document.getElementById("order").addEventListener ('click', confirm )
+                function confirm() {
+                window.open("confirmation.html?id="+id,"confirmation","menubar=no, status=no, height=800px");
+                }
             })
             
             .catch(error => console.error('Error:', error)) 
-            
-            
-            
-            
-            
-        
-}
-}
+           
+   }     
 
-// }
+}
 
 
 

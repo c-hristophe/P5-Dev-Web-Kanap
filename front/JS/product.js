@@ -22,7 +22,7 @@ const colorsSelect = document.querySelector('#colors');
 title.innerText = data.name
 // price
 price.innerText = data.price
-// price
+// description
 description.innerText = data.description
 //color 
 let dropdown = document.getElementById('colors');
@@ -82,8 +82,7 @@ function panier(){
         //s'il y a des produits dans le local storage  
         if(productInLocalStorage){      
             var finalObj = productInLocalStorageParse.concat(newItem);
-            let newArray = [];
-            let uniqueObject = {};
+          
 
             console.log (productInLocalStorageParse)
             const index = productInLocalStorageParse.findIndex( (element) => ((element.id === id) && (element.color === color)));
