@@ -262,6 +262,24 @@ else {
     document.getElementById("firstNameErrorMsg").innerText =""
 }
 
+if(document.getElementById("firstName").value.match(/[0-9]/) ){
+    document.getElementById("firstNameErrorMsg").innerText = "Veuillez saisir un prénom valide";
+    btn.disabled = true;
+    return false;
+}
+else {
+    document.getElementById("firstNameErrorMsg").innerText =""
+}
+
+if(document.getElementById("firstName").value.match(/[@&"()!_$*€£`+=;?#]/) ){
+    document.getElementById("firstNameErrorMsg").innerText = "Veuillez saisir un prénom valide";
+    btn.disabled = true;
+    return false;
+}
+else {
+    document.getElementById("firstNameErrorMsg").innerText =""
+}
+
 if(document.getElementById("lastName").value =="" ){
     document.getElementById("lastNameErrorMsg").innerText = "Veuillez saisir un nom valide";
     btn.disabled = true;
@@ -270,6 +288,25 @@ if(document.getElementById("lastName").value =="" ){
 else {
     document.getElementById("lastNameErrorMsg").innerText =""
 }
+
+if(document.getElementById("lastName").value.match(/[0-9]/) ){
+    document.getElementById("lastNameErrorMsg").innerText = "Veuillez saisir un nom valide";
+    btn.disabled = true;
+    return false;
+}
+else {
+    document.getElementById("lastNameErrorMsg").innerText =""
+}
+
+if(document.getElementById("lastName").value.match(/[@&"()!_$*€£`+=;?#]/) ){
+    document.getElementById("lastNameErrorMsg").innerText = "Veuillez saisir un nom valide";
+    btn.disabled = true;
+    return false;
+}
+else {
+    document.getElementById("lastNameErrorMsg").innerText =""
+}
+
 if(document.getElementById("address").value =="" ){
     document.getElementById("addressErrorMsg").innerText = "Veuillez saisir une adresse valide";
     btn.disabled = true;
@@ -278,6 +315,15 @@ if(document.getElementById("address").value =="" ){
 else {
     document.getElementById("addressErrorMsg").innerText = "";
 }
+if(document.getElementById("address").value.match(/[@&"()!_$*€£`+=;?#]/)){
+    document.getElementById("addressErrorMsg").innerText = "Veuillez saisir une adresse valide";
+    btn.disabled = true;
+    return false;
+}
+else {
+    document.getElementById("addressErrorMsg").innerText = "";
+}
+
 if(document.getElementById("city").value =="" ){
     document.getElementById("cityErrorMsg").innerText = "Veuillez saisir une ville valide";
     btn.disabled = true;
@@ -286,6 +332,25 @@ if(document.getElementById("city").value =="" ){
 else {
     document.getElementById("cityErrorMsg").innerText =""
 }
+
+if(document.getElementById("city").value.match(/[0-9]/) ){
+    document.getElementById("cityErrorMsg").innerText = "Veuillez saisir une ville valide";
+    btn.disabled = true;
+    return false;
+}
+else {
+    document.getElementById("cityErrorMsg").innerText =""
+}
+
+if(document.getElementById("city").value.match(/[@&"()!_$*€£`+=;?#]/) ){
+    document.getElementById("cityErrorMsg").innerText = "Veuillez saisir une ville valide";
+    btn.disabled = true;
+    return false;
+}
+else {
+    document.getElementById("cityErrorMsg").innerText =""
+}
+
 if(document.getElementById("email").value =="" ){
     document.getElementById("emailErrorMsg").innerText = "Veuillez saisir un email valide";
     btn.disabled = true;
@@ -339,8 +404,6 @@ else {
         }
         console.log(valTab)
         
-      
-        
         let body = {
             contact : {
                 firstName: prenom,
@@ -355,8 +418,11 @@ else {
         let order = JSON.stringify(body)
         console.log (order)
 
+        document.getElementById("order").addEventListener ('click', confirm )
         
-        fetch('http://localhost:3000/api/products/order/', {
+        function confirm() {
+
+          fetch('http://localhost:3000/api/products/order/', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
@@ -373,14 +439,13 @@ else {
                 let id = Object.values(data)[2];
                 console.log (id)
                 
-                document.getElementById("order").addEventListener ('click', confirm )
-                function confirm() {
-                window.open("confirmation.html?id="+id,"confirmation","menubar=no, status=no, height=800px");
-                }
-            })
+                
+                window.location.href="confirmation.html?id="+id;
+                })
+            
             
             .catch(error => console.error('Error:', error)) 
-           
+           }
    }     
 
 }
